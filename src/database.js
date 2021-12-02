@@ -1,15 +1,25 @@
+import './setup.js';
 import pg from 'pg';
 
 const { Pool } = pg;
 
-const config = {
-  host: 'localhost',
-  port: 5432,
-  user: 'postgres',
-  password: '123456',
-  database: 'sing_me_a_song',
+let config = {
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  port: parseInt(process.env.DB_PORT, 10),
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
 };
 
-const connection = new Pool(config);
+if (process.env.NODE_ENV === 'prod') {
+  config = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+}
 
-export default connection;
+const pool = new Pool(config);
+
+export default pool;
