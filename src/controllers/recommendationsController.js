@@ -38,4 +38,23 @@ async function upvoteRecommendation(req, res) {
   }
 }
 
-export { postRecommendation, upvoteRecommendation };
+async function downvoteRecommendation(req, res) {
+  try {
+    const id = Number(req.params.id);
+
+    const result = await recommendationsService.downvoteRecommendationService(
+      id,
+    );
+
+    if (result === null) {
+      return res.sendStatus(404);
+    }
+
+    return res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+export { postRecommendation, upvoteRecommendation, downvoteRecommendation };

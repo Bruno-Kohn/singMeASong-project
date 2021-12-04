@@ -14,4 +14,21 @@ async function upScore(id, number) {
   );
 }
 
-export { createRecommendation, upScore };
+async function deleteRecommendation(id) {
+  return connection.query('DELETE FROM recommendations WHERE id = $1', [id]);
+}
+
+async function checkID(id) {
+  const result = await connection.query(
+    `
+  SELECT * FROM recommendations WHERE id = $1
+  `,
+    [id],
+  );
+
+  return result.rows[0];
+}
+
+export {
+  createRecommendation, upScore, deleteRecommendation, checkID,
+};
