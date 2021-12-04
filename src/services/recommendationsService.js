@@ -1,5 +1,5 @@
 import getYoutubeID from 'get-youtube-id';
-import createRecommendation from '../repositories/recommendationsRepository.js';
+import * as recommendationsRepository from '../repositories/recommendationsRepository.js';
 
 async function doingRecommendation(name, youtubeLink) {
   const ID = getYoutubeID(youtubeLink);
@@ -8,7 +8,20 @@ async function doingRecommendation(name, youtubeLink) {
 
   const score = 0;
 
-  return createRecommendation(name, youtubeLink, score);
+  return recommendationsRepository.createRecommendation(
+    name,
+    youtubeLink,
+    score,
+  );
 }
 
-export default doingRecommendation;
+async function upvoteScore(id, number) {
+  const result = await recommendationsRepository.upScore(id, number);
+  return result.rowCount === 0 ? null : result;
+}
+
+async function upvoteRecommendationService(id) {
+  return upvoteScore(id, 1);
+}
+
+export { doingRecommendation, upvoteRecommendationService };

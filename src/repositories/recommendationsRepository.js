@@ -7,4 +7,11 @@ async function createRecommendation(name, youtubeLink, score) {
   );
 }
 
-export default createRecommendation;
+async function upScore(id, number) {
+  return connection.query(
+    'UPDATE recommendations SET score = score + $1 WHERE id = $2',
+    [number, id],
+  );
+}
+
+export { createRecommendation, upScore };

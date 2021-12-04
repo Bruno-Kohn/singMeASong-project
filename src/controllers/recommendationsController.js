@@ -1,4 +1,4 @@
-import doingRecommendation from '../services/recommendationsService.js';
+import * as recommendationsService from '../services/recommendationsService.js';
 
 async function postRecommendation(req, res) {
   try {
@@ -6,7 +6,10 @@ async function postRecommendation(req, res) {
 
     if (!name || !youtubeLink) return res.sendStatus(400);
 
-    const result = await doingRecommendation(name, youtubeLink);
+    const result = await recommendationsService.doingRecommendation(
+      name,
+      youtubeLink,
+    );
 
     if (result === null) {
       return res.sendStatus(400);
@@ -18,4 +21,21 @@ async function postRecommendation(req, res) {
   }
 }
 
-export default postRecommendation;
+async function upvoteRecommendation(req, res) {
+  try {
+    const id = Number(req.params.id);
+
+    const result = await recommendationsService.upvoteRecommendationService(id);
+
+    if (result === null) {
+      return res.sendStatus(404);
+    }
+
+    return res.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+export { postRecommendation, upvoteRecommendation };
