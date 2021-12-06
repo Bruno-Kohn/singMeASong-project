@@ -23,7 +23,7 @@ describe('upvote recommendation', () => {
     expect(result).toEqual(null);
   });
 
-  it('returns true if score invalid', async () => {
+  it('returns rowCount: 1 if score invalid', async () => {
     upScore.mockImplementationOnce(() => ({
       rowCount: 1,
     }));
@@ -37,9 +37,12 @@ describe('upvote recommendation', () => {
     checkRecommendation.mockImplementationOnce(() => ({
       score: 1,
     }));
+    upScore.mockImplementationOnce(() => ({
+      rowCount: 1,
+    }));
     const result = await recommendationsService.downvoteRecommendationService(
       1,
     );
-    expect(result).toEqual(true);
+    expect(result).toEqual({ rowCount: 1 });
   });
 });
