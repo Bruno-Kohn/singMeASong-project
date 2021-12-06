@@ -98,3 +98,22 @@ A API possui as seguintes rotas:
                 ...
             ]
 </details>
+
+## Como rodar o projeto?
+
+Rode localmente seguindo os passos abaixo:
+
+1. Clone este repositorio
+2. Instale as dependencias
+```bash
+npm i
+```
+3. Abra um arquivo "database_backup.sql", copie e cole o script para criar seu banco de dados no postgres;
+
+4. Crie um arquivo '.env.dev' seguindo o arquivo '.env.example';
+
+5.Rode o backend 
+```bash
+npm start:dev
+```
+
