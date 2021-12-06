@@ -29,6 +29,50 @@ async function checkID(id) {
   return result.rows[0];
 }
 
+async function checkRecommendation(minScore, maxScore, order) {
+  let where = '';
+  const params = [minScore];
+
+  if (maxScore === undefined || !maxScore) {
+    where = 'score >= $1';
+  } else {
+    where = 'score BETWEEN $1 AND $2';
+    params.push(maxScore);
+  }
+
+  let sql = `SELECT * FROM recommendations WHERE ${where}`;
+
+  if (order) {
+    sql += ` ORDER BY ${order}`;
+  }
+
+  const result = await connection.query(sql, params);
+
+  return result.rows;
+}
+
+async function checkRecommendationRandom() {
+  const result = await connection.query(
+    'SELECT * FROM recommendations ORDER BY RANDOM() LIMIT = 1',
+  );
+
+  return result.rows[0];
+}
+
+async function selectTopAmount(amount) {
+  const result = await connection.query(
+    'SELECT * FROM recommendations ORDER BY score DESC LIMIT $1',
+    [Number(amount)],
+  );
+  return result;
+}
+
 export {
-  createRecommendation, upScore, deleteRecommendation, checkID,
+  createRecommendation,
+  upScore,
+  deleteRecommendation,
+  checkID,
+  checkRecommendation,
+  selectTopAmount,
+  checkRecommendationRandom,
 };

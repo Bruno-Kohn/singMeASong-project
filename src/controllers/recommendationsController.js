@@ -1,4 +1,5 @@
 import * as recommendationsService from '../services/recommendationsService.js';
+import * as recommendationsRepository from '../repositories/recommendationsRepository.js';
 
 async function postRecommendation(req, res) {
   try {
@@ -57,4 +58,34 @@ async function downvoteRecommendation(req, res) {
   }
 }
 
-export { postRecommendation, upvoteRecommendation, downvoteRecommendation };
+async function randomRecommendations(req, res) {
+  try {
+    const result = await recommendationsService.randomRecommendationsService();
+    if (!result) return res.sendStatus(404);
+    return res.send(result);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+async function topAmount(req, res) {
+  const { amount } = req.params;
+
+  try {
+    if (!Number(amount)) return res.sendStatus(404);
+    const result = await recommendationsRepository.selectTopAmount(amount);
+    return res.send(result.rows[0]);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+export {
+  postRecommendation,
+  upvoteRecommendation,
+  downvoteRecommendation,
+  randomRecommendations,
+  topAmount,
+};

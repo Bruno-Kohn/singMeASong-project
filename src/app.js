@@ -6,16 +6,23 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post('/recommendation', recommendationsController.postRecommendation);
+app.post('/recommendations', recommendationsController.postRecommendation);
 
 app.post(
-  '/recommendation/:id/upvote',
+  '/recommendations/:id/upvote',
   recommendationsController.upvoteRecommendation,
 );
 
 app.post(
-  '/recommendation/:id/downvote',
+  '/recommendations/:id/downvote',
   recommendationsController.downvoteRecommendation,
 );
+
+app.get(
+  '/recommendations/random',
+  recommendationsController.randomRecommendations,
+);
+
+app.get('/recommendations/top/:amount', recommendationsController.topAmount);
 
 export default app;

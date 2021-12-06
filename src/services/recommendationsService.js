@@ -1,4 +1,3 @@
-import getYoutubeID from 'get-youtube-id';
 import * as recommendationsRepository from '../repositories/recommendationsRepository.js';
 import validation from '../validations/joiValidation.js';
 
@@ -7,26 +6,22 @@ async function doingRecommendation(name, youtubeLink) {
 
   if (checkValidation.error) return null;
 
-  const ID = getYoutubeID(youtubeLink);
-
-  if (ID === null) return null;
+  if (!youtubeLink.includes('youtube.com/watch?')) return null;
 
   const score = 0;
 
-  return recommendationsRepository.createRecommendation(
+  await recommendationsRepository.createRecommendation(
     name,
     youtubeLink,
     score,
   );
-}
 
-async function upvoteScore(id, number) {
-  const result = await recommendationsRepository.upScore(id, number);
-  return result.rowCount === 0 ? null : result;
+  return true;
 }
 
 async function upvoteRecommendationService(id) {
-  return upvoteScore(id, 1);
+  const result = await recommendationsRepository.upScore(id, 1);
+  return result.rowCount === 0 ? null : result;
 }
 
 async function downvoteRecommendationService(id) {
@@ -35,11 +30,48 @@ async function downvoteRecommendationService(id) {
   if (checkRecommendation.score === -5) {
     return recommendationsRepository.deleteRecommendation(id);
   }
-  return upvoteScore(id, -1);
+  const result = await recommendationsRepository.upScore(id, -1);
+  return result.rowCount === 0 ? null : result;
+}
+
+async function randomRecommendationsService() {
+  const random = Math.random();
+
+  let reqString = '';
+  const order = 'RANDOM()';
+
+  if (random > 0.7) {
+    reqString = {
+      minScore: -5,
+      maxScore: 10,
+      order,
+    };
+
+    const result = await recommendationsRepository.checkRecommendation(
+      reqString,
+    );
+
+    if (result.length !== 0) return result;
+  } else {
+    reqString = {
+      minScore: -5,
+      order,
+    };
+
+    const result = await recommendationsRepository.checkRecommendation(
+      reqString,
+    );
+
+    if (result.length !== 0) return result;
+  }
+
+  const result = await recommendationsRepository.checkRecommendationRandom();
+  return result;
 }
 
 export {
   doingRecommendation,
   upvoteRecommendationService,
   downvoteRecommendationService,
+  randomRecommendationsService,
 };
