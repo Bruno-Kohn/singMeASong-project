@@ -56,7 +56,7 @@ async function checkRecommendationRandom() {
     'SELECT * FROM recommendations ORDER BY RANDOM() LIMIT = 1',
   );
 
-  return result.rows[0];
+  return result.rows;
 }
 
 async function selectTopAmount(amount) {

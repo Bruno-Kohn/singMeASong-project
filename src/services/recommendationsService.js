@@ -34,9 +34,7 @@ async function downvoteRecommendationService(id) {
   return result.rowCount === 0 ? null : result;
 }
 
-async function randomRecommendationsService() {
-  const random = Math.random();
-
+async function randomRecommendationsService(random) {
   let reqString = '';
   const order = 'RANDOM()';
 
@@ -51,10 +49,10 @@ async function randomRecommendationsService() {
       reqString,
     );
 
-    if (result.length !== 0) return result;
+    if (result.length) return result[0];
   } else {
     reqString = {
-      minScore: -5,
+      minScore: 10,
       order,
     };
 
@@ -62,11 +60,11 @@ async function randomRecommendationsService() {
       reqString,
     );
 
-    if (result.length !== 0) return result;
+    if (result.length) return result[0];
   }
 
   const result = await recommendationsRepository.checkRecommendationRandom();
-  return result;
+  return result.length ? result[0] : null;
 }
 
 export {

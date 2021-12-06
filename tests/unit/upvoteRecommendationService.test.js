@@ -4,7 +4,7 @@ import * as recommendationsRepository from '../../src/repositories/recommendatio
 describe('upvote recommendation', () => {
   const upScore = jest.spyOn(recommendationsRepository, 'upScore');
 
-  it('returns null if score invalid', async () => {
+  it('returns null if invalid', async () => {
     upScore.mockImplementationOnce(() => ({
       rowCount: 0,
     }));
@@ -12,7 +12,7 @@ describe('upvote recommendation', () => {
     expect(result).toEqual(null);
   });
 
-  it('returns true if score invalid', async () => {
+  it('returns rowCount if valid', async () => {
     upScore.mockImplementationOnce(() => ({
       rowCount: 1,
     }));

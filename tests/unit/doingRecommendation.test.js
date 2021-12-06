@@ -29,4 +29,12 @@ describe('doing recommendation', () => {
     );
     expect(result).toEqual(true);
   });
+
+  it('should return the recommendation object', async () => {
+    const result = await recommendationsService.doingRecommendation(
+      'Caze',
+      'https://www.google.com',
+    );
+    expect(result).toEqual(null);
+  });
 });

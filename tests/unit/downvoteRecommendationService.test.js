@@ -4,10 +4,7 @@ import * as recommendationsRepository from '../../src/repositories/recommendatio
 describe('upvote recommendation', () => {
   const upScore = jest.spyOn(recommendationsRepository, 'upScore');
 
-  const checkRecommendation = jest.spyOn(
-    recommendationsRepository,
-    'checkRecommendation',
-  );
+  const checkID = jest.spyOn(recommendationsRepository, 'checkID');
 
   const deleteRecommendation = jest
     .spyOn(recommendationsRepository, 'deleteRecommendation')
@@ -34,7 +31,7 @@ describe('upvote recommendation', () => {
   });
 
   it('returns true if score invalid', async () => {
-    checkRecommendation.mockImplementationOnce(() => ({
+    checkID.mockImplementationOnce(() => ({
       score: 1,
     }));
     upScore.mockImplementationOnce(() => ({
@@ -44,5 +41,18 @@ describe('upvote recommendation', () => {
       1,
     );
     expect(result).toEqual({ rowCount: 1 });
+  });
+
+  it('returns true if score invalid', async () => {
+    checkID.mockImplementationOnce(() => ({
+      score: -5,
+    }));
+    upScore.mockImplementationOnce(() => ({
+      rowCount: 1,
+    }));
+    const result = await recommendationsService.downvoteRecommendationService(
+      1,
+    );
+    expect(result).toEqual('deleted');
   });
 });

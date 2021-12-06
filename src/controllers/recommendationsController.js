@@ -60,7 +60,9 @@ async function downvoteRecommendation(req, res) {
 
 async function randomRecommendations(req, res) {
   try {
-    const result = await recommendationsService.randomRecommendationsService();
+    const result = await recommendationsService.randomRecommendationsService(
+      Math.random(),
+    );
     if (!result) return res.sendStatus(404);
     return res.send(result);
   } catch (error) {
